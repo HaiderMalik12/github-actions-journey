@@ -7,4 +7,5 @@ jobs:
   say-hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello, Github Actions updated!"
+      - name: Say hello
+        run: echo "Hello, Github Actions updated!"
