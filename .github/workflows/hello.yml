@@ -8,10 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Say hello
-        run: echo "Hello, Github Actions updated!"
-
-      - name: Fail on Purpose
-        run: exit 1
-
+        run: echo "Hello, Github Actions updated!
+        
       - name: Show the date
         run: date
