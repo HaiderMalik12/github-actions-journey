@@ -3,6 +3,12 @@ name: Hello Actions
 on: 
  push:
  workflow_dispatch:
+   inputs:
+      person:
+         description: Who should we greet?
+         required: true
+         default: Learner
+         type: string
      
 
 # Start the list of the jobs
@@ -18,3 +24,9 @@ jobs:
 
       - name: Show working directory
         run: pwd
+
+      - name: Greet the person
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          PERSON: ${{inputs.person}}
+        run: echo "Hello, $PERSON!"
