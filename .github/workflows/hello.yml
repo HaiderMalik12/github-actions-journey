@@ -12,3 +12,6 @@ jobs:
 
       - name: Show the date
         run: date
+
+      - name: Show working directory
+        run: pwd
