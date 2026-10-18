@@ -13,8 +13,5 @@ jobs:
       - name: Show the date
         run: date
 
-      - name: International Failure
-        run: exit 1
-
       - name: Show working directory
         run: pwd
