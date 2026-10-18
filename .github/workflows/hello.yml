@@ -1,6 +1,9 @@
 name: Hello Actions
 
-on: push
+on: 
+ push:
+ workflow_dispatch:
+     
 
 # Start the list of the jobs
 jobs:
