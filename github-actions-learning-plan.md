@@ -25,6 +25,57 @@ Keep using the same small application throughout the CI exercises. Choose a lang
 
 Reference: [Understanding GitHub Actions](https://docs.github.com/en/actions/get-started/understand-github-actions).
 
+## Detailed lessons for sections 2–4
+
+Here, section means the numbered session in the Week 1 table. Each lesson is a small exercise, not an additional full session. Split a section over multiple sittings when needed. A checked box means the exercise has been demonstrated in our conversation.
+
+### Section 2: Triggers — 6 lessons
+
+**Goal:** Control when your workflow starts and predict when it will not start.
+
+1. [x] **2.1 — Automatic push trigger.** Use `on: push`, push a commit, and find the resulting run in Actions. Explain why pushing a workflow change also starts a run.
+2. [x] **2.2 — Manual trigger.** Add `workflow_dispatch` alongside `push`, push the configuration to the default branch, and start a run using **Run workflow**. Explain that these are independent triggers.
+3. [x] **2.3 — Manual inputs.** Add the string input `person`. Pass it through a step environment variable and print the greeting. Use `if: github.event_name == 'workflow_dispatch'` so this step is skipped on pushes. The manual greeting `Hello, haider!` has been confirmed; also check a push run to verify the skip.
+4. [ ] **2.4 — Branch filters (next lesson).** Restrict `push` to `main`. Push that configuration to `main` and confirm a run. Create a feature branch from the updated `main`, change the README, and push: confirm there is no automatic run. The feature branch must contain the new filter for this test to be meaningful.
+5. [ ] **2.5 — Pull request trigger.** Add `pull_request` targeting `main`. Open a pull request from the feature branch and confirm a run. Push another commit to the open pull request and confirm another run. Explain why a push to the feature branch can produce a pull request run even though the `push` branch filter excludes it.
+6. [ ] **2.6 — Path filters and recap.** Add `paths` to the `push` trigger, allowing `practice/**` and `.github/workflows/**`. Keep `pull_request` unfiltered by path for this exercise. On `main`, push a README-only change and then a separate change to `practice/notes.txt`. Predict and verify that only the second change triggers a push run. Start a manual run to confirm that push filters do not disable manual dispatch.
+
+**Completion check:** Explain which event caused each run. Distinguish a workflow that never starts because its event filters do not match from a step skipped by an `if` condition. Explain that `pull_request.branches` matches the target branch, and that branch and path filters on the same event must both match.
+
+**Practice note:** Use direct pushes to `main` for lesson 2.6 only in this practice repository if allowed. If branch rules prevent them, use a dedicated practice branch included in the push filter. Avoid making a path-filtered practice workflow a required merge check; skipped workflows can leave required checks pending.
+
+Reference: [Workflow syntax: events, branches, paths, and inputs](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax).
+
+### Section 3: Runner environment — 5 lessons
+
+**Goal:** Explain where commands execute and what persists between steps.
+
+Use manual runs for these experiments so the filters from section 2 do not get in your way. Run these exercises before checkout, or in a separate practice job without checkout.
+
+1. [ ] **3.1 — Inspect the machine.** Run `uname -a`, `whoami`, `pwd`, and `ls -la`. Compare the results with your local computer. Explain that `runs-on: ubuntu-latest` selects a GitHub-hosted Ubuntu runner, and identify the runner workspace.
+2. [ ] **3.2 — Share a file between steps.** Write `Hello from step one` to `message.txt` in one step. Read it with `cat message.txt` in the next. Predict the result before running. Explain that steps in the same job can access files left in the workspace.
+3. [ ] **3.3 — Separate shell processes.** Export `LESSON_MESSAGE=hello` in one step. In the next, print it using `echo "Value: ${LESSON_MESSAGE:-unset}"`. Observe that it is unset. Keep the file from lesson 3.2 and explain why the file persists while the shell variable does not. Persistent environment variables through `$GITHUB_ENV` are covered in session 5.
+4. [ ] **3.4 — Working directories and multiline scripts.** Use `run: |` to create a directory, change into it, and run `pwd` within one step. Run `pwd` in the next step and observe the reset. Then use `working-directory` to explicitly select that existing directory for a step. Explain that the directory must exist before the step starts.
+5. [ ] **3.5 — Fresh runs.** Add a first step that checks whether `message.txt` already exists, before the step that creates it. Run the workflow twice. Confirm that a file generated during the first run is absent at the start of the second run on a fresh GitHub-hosted Ubuntu runner. Cross-job isolation is covered in session 7.
+
+**Completion check:** Explain these three boundaries: files can persist between steps in one job; ordinary shell exports and `cd` do not persist across steps; generated workspace files do not automatically persist into a new GitHub-hosted job or run.
+
+Reference: [Understanding GitHub Actions: runners, jobs, and steps](https://docs.github.com/en/actions/get-started/understand-github-actions).
+
+### Section 4: Actions versus commands — 5 lessons
+
+**Goal:** Use an existing action and explain how it differs from a shell command.
+
+1. [ ] **4.1 — Recognize `run` and `uses`.** Identify the `run` steps in your workflow. Explain that `run` executes shell commands, while `uses` invokes a reusable action. These belong in separate steps; a single step cannot contain both `run` and `uses`.
+2. [ ] **4.2 — Observe the workspace before checkout.** At the beginning of a job without checkout, list the workspace and test whether `README.md` exists. Explain why having the workflow definition available does not automatically put repository files in the workspace.
+3. [ ] **4.3 — Check out the repository.** Read the official `actions/checkout` README and use its current supported release. Add checkout before a step that reads `README.md`. Run manually and compare the workspace before and after checkout. Explain why checkout is needed for working with repository code but was unnecessary for `echo`, `date`, and `pwd`.
+4. [ ] **4.4 — Configure an action with `with`.** Set checkout's `fetch-depth` input to `0` and inspect history with `git log --oneline -5`. Explain that `with` passes inputs to an action, whereas `env` supplies environment variables to a step. Repositories with fewer than five commits will show fewer entries. Restore the default shallow checkout afterward unless you need full history.
+5. [ ] **4.5 — Understand action references.** Break down `owner/repository@ref`. Identify the owner, action repository, and version reference for checkout. Compare a release tag with a full commit SHA. Locate the action's inputs and required token permissions in its documentation. Practice verifying and pinning a SHA in session 13.
+
+**Completion check:** From a blank job, add checkout followed by a shell command that reads a repository file. Explain the purpose of `uses`, `run`, `with`, and `@ref` without copying an explanation.
+
+Reference: [Official checkout action and inputs](https://github.com/actions/checkout).
+
 ## Week 2: Control execution and pass information
 
 | Session | Learn | Hands-on exercise |
