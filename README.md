@@ -1,1 +1,1 @@
-# github-actions-journey
+# github-actions-journeys
