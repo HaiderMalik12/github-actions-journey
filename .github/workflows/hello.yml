@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'practice/**'
+      - '.github/workflows/**'
+
   pull_request:
     branches:
        - main
