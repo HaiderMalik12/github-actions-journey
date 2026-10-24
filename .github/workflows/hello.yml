@@ -1,11 +1,10 @@
 name: Hello Actions
 
 on:
-  
   push:
     branches:
       - main
-      paths:
+    paths:
       - 'practice/**'
       - '.github/workflows/**'
 
