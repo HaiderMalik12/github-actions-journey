@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'paractice/**'
+      - 'practice/**'
       - '.github/workflows/**'
 
   pull_request:
